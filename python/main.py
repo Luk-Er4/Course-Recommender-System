@@ -4,7 +4,6 @@ import os
 
 # get course infos
 import coursedata
-
 temp = coursedata.course_data_collection()
 course_codes = temp[0]
 course_names = temp[1]
@@ -35,12 +34,12 @@ transcript = temp[1]
 # get pass or fail infos
 import checkpassorfail
 passed_courses = checkpassorfail.check_pass_or_fail(course_grade)
-  
+
 # get waiver infos
 import checkwaiver
 wavied_course = checkwaiver.check_waiver(transcript)
 
-### survey section
+### survey section ###
 import studentsurvey
 
 # get the major info
