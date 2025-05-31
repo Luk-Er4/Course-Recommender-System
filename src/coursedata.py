@@ -1,10 +1,13 @@
 import json
+from pathlib import Path
 
 ##### Get the """DATA""" from json
 def course_data_collection():
     # Get the json file that contains course information
-    with open(r'C:\Users\euiji\OneDrive\Desktop\Github Repos\Course Recommender System\data_source\coursejson\course_descriptions_6.json', 'r') as file:
-        data = json.load(file)
+    file_path = Path("data/coursejson/course_descriptions_6.json")
+
+    with file_path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
 
     #1. Course Codes
     course_codes = [

@@ -1,8 +1,9 @@
 import os
+from pathlib import Path
 
 def check_waiver(transcript):
     # Check Wavier by tracking student name
-    wavier_dir = r'C:\Users\euiji\OneDrive\Desktop\Github Repos\Course Recommender System\data_source\Wavier for Students'
+    wavier_dir = Path("data/Wavier for Students")
     wavier_lst = os.listdir(wavier_dir)
 
     wavied_course = []

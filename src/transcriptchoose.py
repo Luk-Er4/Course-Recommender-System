@@ -1,9 +1,10 @@
 import os
+from pathlib import Path
 
 ##### Get the """FACT""" from a transcript
 def transcript_choose():
     # Show Transcript List
-    transcript_dir = r'C:\Users\euiji\OneDrive\Desktop\Github Repos\Course Recommender System\data_source\transcript'
+    transcript_dir = Path("data/transcript")
     transcript_lst = os.listdir(transcript_dir)
 
     # Choose what transcript
@@ -21,8 +22,10 @@ def transcript_choose():
             print("Thanks for responding!")
             good_to_go = False
 
+    transcript_path = transcript_dir / transcript
+
     # Open the Transcript
-    with open(transcript_dir + "\\" + transcript, "r") as file:
+    with open(transcript_path, "r") as file:
         if file:
             content = file.read()
             print(content)                                        # Debug purpose
