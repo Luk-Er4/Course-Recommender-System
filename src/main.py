@@ -47,10 +47,12 @@ student_minor = studentsurvey.minor_info()
 # get semester info
 advised_semester = studentsurvey.semester_info()
 
+'''
 # get certification preference info
 temp = studentsurvey.certification_info()
 interested_certificates = temp[0]
 cert_data = temp[1]
+'''
 
 # get interested topics info
 student_interests = studentsurvey.topic_info(topics)
@@ -145,7 +147,7 @@ def PassedStandingPrereqs(code):
 
 def CheckStandingPrereqs(code):
     return code in course_standing_prerequisite
-
+'''
 ##### S7
 def IsCertificatesCourse(code, data2):
   for subject_area in data2["certificates"]:
@@ -157,7 +159,7 @@ def IsCertificatesCourse(code, data2):
           if code in course["options"]:
             return True
   return False
-
+'''
 ########################################################################
 
 MajorInterestRecommendations = [
@@ -190,6 +192,7 @@ MinorCoreRecommendations = [
     code for code in course_codes
     if IsCoreMinor(code) and not HasPassed(code)
 ]
+'''
 CertificateRecommendations = [
     code for code in course_codes
     if IsCertificatesCourse(code, cert_data)
@@ -198,9 +201,11 @@ CertificateRecommendations = [
     and PassedANDPrereqs(code)
     and PassedORPrereqs(code)
 ]
+'''
 
 RecommendedCourses = [
-    code for code in set(MajorInterestRecommendations + MajorCoreRecommendations + MinorInterestRecommendations + MinorCoreRecommendations + CertificateRecommendations)
+    #code for code in set(MajorInterestRecommendations + MajorCoreRecommendations + MinorInterestRecommendations + MinorCoreRecommendations + CertificateRecommendations)
+    code for code in set(MajorInterestRecommendations + MajorCoreRecommendations + MinorInterestRecommendations + MinorCoreRecommendations)
     if PassedANDPrereqs(code) and PassedORPrereqs(code) and PassedApprovalPrereqs(code) and PassedStandingPrereqs(code)
 ]
 
@@ -215,10 +220,9 @@ AvailableCourses = [
 import recommendation
 
 # student info
-recommendation.student_infos(student_interests, interested_certificates, student_major, student_minor, advised_semester)
+#recommendation.student_infos(student_interests, interested_certificates, student_major, student_minor, advised_semester)
+recommendation.student_infos(student_interests, student_major, student_minor, advised_semester)
 
 # recommended lists
-recommendation.recommendation_list(MajorInterestRecommendations, CertificateRecommendations, MajorCoreRecommendations,
-                                   MinorCoreRecommendations, RecommendedCourses, advised_semester, AvailableCourses, wavied_course, 
-                                   ismajor = isCSMajor() or isCYMajor(), isminor = isCSMinor() or isCYMinor())
-
+#recommendation.recommendation_list(MajorInterestRecommendations, CertificateRecommendations, MajorCoreRecommendations,MinorCoreRecommendations, RecommendedCourses, advised_semester, AvailableCourses, wavied_course, ismajor = isCSMajor() or isCYMajor(), isminor = isCSMinor() or isCYMinor())
+recommendation.recommendation_list(MajorInterestRecommendations, MajorCoreRecommendations,MinorCoreRecommendations, RecommendedCourses, advised_semester, AvailableCourses, wavied_course, ismajor = isCSMajor() or isCYMajor(), isminor = isCSMinor() or isCYMinor())

@@ -8,7 +8,7 @@ def connectSQL():
         mydb = conn.connect(
             host="localhost", 
             user="root",
-            password="___YOUR__PASSWORD___", # put your password here
+            password="___YOUR__PASSWORD___", # ___YOUR__PASSWORD___ put your password here
             database="course_recommender" 
         )
         print("Connection to MySQL successful!")
