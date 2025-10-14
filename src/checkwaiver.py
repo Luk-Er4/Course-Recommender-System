@@ -12,7 +12,7 @@ def check_waiver(transcript):
 
     if target_wavier in wavier_lst:
         there_is_wavier = True
-        with open(wavier_dir + "\\" + target_wavier, "r") as file:
+        with open(str(wavier_dir) + "\\" + target_wavier, "r") as file:
             content = file.read()
             print(content)
 
