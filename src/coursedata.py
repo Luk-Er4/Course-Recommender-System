@@ -1,10 +1,15 @@
 import json
 from pathlib import Path
+import sqlconnector
+import jsoncreator
 
 ##### Get the """DATA""" from json
 def course_data_collection():
     # Get the json file that contains course information
-    file_path = Path("data/coursejson/course_descriptions_6.json")
+    result = sqlconnector.connectSQL()
+    jsoncreator.makeJson(result)
+
+    file_path = Path("data/coursejson/courses_info.json")
 
     with file_path.open("r", encoding="utf-8") as f:
         data = json.load(f)
@@ -155,6 +160,7 @@ def course_data_collection():
         if "prestandings" in course
     ]
 
+    '''
     print("course_codes                 ", course_codes)
     print("course_names                 ", course_names)
     print("course_available             ", course_available)
@@ -177,5 +183,6 @@ def course_data_collection():
     ##### S6
     print("course_approval_prerequisite ", course_approval_prerequisite)
     print("course_standing_prerequisite ", course_standing_prerequisite)
+    '''
 
     return course_codes, course_names, course_available, topics, course_topics, course_AND_prerequisites, course_req_cs_major, course_elt_cs_major, course_req_cy_major, course_elt_cy_major, course_OR_prerequisites, course_core_quisites, course_req_cs_minor, course_elt_cs_minor, course_req_cy_minor, course_elt_cy_minor, course_approval_prerequisite, course_standing_prerequisite, data

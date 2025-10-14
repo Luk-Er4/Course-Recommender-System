@@ -1,7 +1,3 @@
-# Get all required library
-import json
-import os
-
 # get course infos
 import coursedata
 temp = coursedata.course_data_collection()

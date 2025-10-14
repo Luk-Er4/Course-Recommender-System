@@ -34,7 +34,6 @@ def major_info():
             good_to_go = False
         else:
             print("You typed wrong!")
-        print("Thanks for responding!")
 
     return student_major
 
@@ -72,7 +71,6 @@ def minor_info():
             good_to_go = False
         else:
             print("You typed wrong!")
-        print("Thanks for responding!")
 
     return student_minor
 
@@ -97,7 +95,6 @@ def semester_info():
             good_to_go = False
         else:
             print("You typed wrong!")
-    print("Thanks for responding!")
 
     return advised_semester
 
@@ -113,7 +110,6 @@ def topic_info(topics):
         if interest == "STOP" and len(student_interests) == 0:
             print("You need to put at least one topic!")
         elif interest == "STOP" and len(student_interests) != 0:
-            print("Thanks for responding!")
             good_to_go = False
         elif interest not in topics:
             print("You typed wrong!")
@@ -143,7 +139,6 @@ def standing_info():
             good_to_go = False
         else:
             print("You typed wrong!")
-    print("Thanks for responding!")
 
     return student_classification
 
@@ -187,7 +182,6 @@ def certification_info():
     while good_to_go:
         certificate = input("\nHere are the certificates we have. Choose the certificates one by one. If you want to stop, type STOP.")
         if certificate == "STOP":
-            print("Thanks for responding!")
             good_to_go = False
         elif certificate not in certificate_list:
             print("You typed wrong!")
