@@ -1,3 +1,4 @@
 # ignore pycache
 __pycache__/
-bringpassword.py
+bringpassword_client.py
+bringpassword_admin.py
