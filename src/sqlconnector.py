@@ -1,4 +1,5 @@
 import mysql.connector
+import bringpassword
 
 def connectSQL():
     print("connecting to SQL...")
@@ -8,7 +9,7 @@ def connectSQL():
         mydb = conn.connect(
             host="localhost", 
             user="root",
-            password="___YOUR__PASSWORD___", # ___YOUR__PASSWORD___ put your password here
+            password=bringpassword.pw, # ___YOUR__PASSWORD___ put your password here
             database="course_recommender" 
         )
         print("Connection to MySQL successful!")
