@@ -13,7 +13,7 @@ def connectSQL():
             database="course_recommender" 
         )
         print("Connection to MySQL successful!")
-        return mydb
+        return mydb.is_connected(), mydb
     except conn.Error as err:
         print(f"Error connecting to MySQL: {err}")
-        return mydb.is_connected()
+        return mydb.is_connected(), mydb
