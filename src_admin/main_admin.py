@@ -7,11 +7,12 @@ import sqlconnector_admin
 while True:
     connection, db = sqlconnector_admin.connectSQL()
     if connection == True:
+        _db = db
         cursor = db.cursor()
         break
 
 # Entered Admin / Choose Tasks 
-print("You have an authority to \n 1. Retreive all existing courses \n 2. Select a course and get its details" \
+print("You have an authority to \n 1. Retreive all existing courses info \n 2. Select a course and get its details" \
         "\n 3. Add a course with its info \n 4. Modify course info \n 5. Delete course info" \
         "Type the number to proceed, or Type 0 to exit.")
 
@@ -23,20 +24,19 @@ import dotask
 while command != 0:
     match command:
         case 1:
-            print("Do 1")
             dotask.GetAllCourse(cursor)
         case 2:
             print("Do 2")
             dotask.SearchBy(cursor)
         case 3:
             print("Do 3")
-            dotask.AddCourse(cursor)
+            dotask.AddCourse(cursor, _db)
         case 4:
             print("Do 4")
             dotask.ModifyCourse(cursor)
         case 5:
             print("Do 5")
-            dotask.DeleteCourse(cursor)
+            dotask.DeleteCourse(cursor, _db)
         case _:
             print("Typed Wrong")
 
