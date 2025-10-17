@@ -15,8 +15,8 @@ def quryAndJsonify(query, cursor):
     results = [dict(zip(columns, row)) for row in cursor.fetchall()]
     return json.dumps(results, indent=4) 
 
-# Prevent Injection
-@app.get("/", status_code=status.HTTP_302_FOUND)
+# Prevent Injection / Search By Cols
+@app.get("/courses/", status_code=status.HTTP_302_FOUND)
 def checkcolnames(cursor):
     query = '''
     SELECT COLUMN_NAME
@@ -27,31 +27,43 @@ def checkcolnames(cursor):
     cursor.execute(query, ('asu_courses', 'course_recommender')) 
     return [row[0] for row in cursor.fetchall()]
 
+# Call All Data in the Column
+@app.get("/courses/", status_code=status.HTTP_302_FOUND)
+def checkduplicates(cursor, info):
+    query = f"SELECT `{info}` FROM asu_courses"
+    cursor.execute(query)
+    return [row[0] for row in cursor.fetchall()]
+
 # Welcome Page
 @app.get("/", status_code=status.HTTP_302_FOUND)
 def welcome_message():
     results = "welsome"
     return results
 
-# Task 1: Call All Course Info
-@app.get("/", response_class=PlainTextResponse)
+# Task 1-2: Call All Course Info
+@app.get("/courses/", response_class=PlainTextResponse)
 def callall(cursor):
     query = "SELECT * FROM asu_courses"
     return quryAndJsonify(query, cursor)
 
-# Task 3: Add Course Info
-@app.post("/", response_class=PlainTextResponse)
+# Task 3-2: Add Course Info
+@app.post("/courses/", response_class=PlainTextResponse)
 def addcourse(cursor, db, sbj, code, name):
     query = "INSERT INTO asu_courses (`subject`, `code`, `name`) VALUES (%s, %s, %s)"
     values = (sbj, code, name)
     cursor.execute(query, values)
     db.commit()
 
-# Task 5: Delete Course Info
-@app.delete("/", status_code=status.HTTP_200_OK)
+# Task 5-2: Delete Course Info
+@app.delete("/courses/", status_code=status.HTTP_200_OK)
 def deletecourse(cursor, db, code):
     query = "DELETE FROM asu_courses WHERE `code` = %s"
-    values = (code)
+    values = (code,)
+    # Find the course, if not, just ignore 
+
+
+
+
     cursor.execute(query, values)
     db.commit()
 

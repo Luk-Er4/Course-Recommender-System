@@ -26,16 +26,15 @@ while command != 0:
         case 1:
             dotask.GetAllCourse(cursor)
         case 2:
-            print("Do 2")
+            print("Do 2") # Need Search Design
             dotask.SearchBy(cursor)
         case 3:
             print("Do 3")
             dotask.AddCourse(cursor, _db)
         case 4:
-            print("Do 4")
+            print("Do 4") # Modif Design
             dotask.ModifyCourse(cursor)
         case 5:
-            print("Do 5")
             dotask.DeleteCourse(cursor, _db)
         case _:
             print("Typed Wrong")
