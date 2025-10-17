@@ -727,6 +727,25 @@
                     ]
                 }
             ]
+        },
+        {
+            "subject": "Computer Science",
+            "courses": [
+                {
+                    "code": "CS9999",
+                    "name": "New Methodology of Computer Science",
+                    "topic": "order by topic",
+                    "availsemester": [],
+                    "prereq": [
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "prestandings": null,
+                    "preapproval": true
+                }
+            ]
         }
     ]
 }

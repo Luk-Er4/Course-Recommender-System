@@ -16,35 +16,30 @@ print("You have an authority to \n 1. Retreive all existing courses info \n 2. S
         "\n 3. Add a course with its info \n 4. Modify course info \n 5. Delete course info" \
         "Type the number to proceed, or Type 0 to exit.")
 
-command = int(input())
+command = input()
 
 # Proceed to task
 import dotask
 
 while command != 0:
-    match command:
-        case 1:
-            dotask.GetAllCourse(cursor)
-        case 2:
-            print("Do 2") # Need Search Design
-            dotask.SearchBy(cursor)
-        case 3:
-            print("Do 3")
-            dotask.AddCourse(cursor, _db)
-        case 4:
-            print("Do 4") # Modif Design
-            dotask.ModifyCourse(cursor)
-        case 5:
-            dotask.DeleteCourse(cursor, _db)
-        case _:
-            print("Typed Wrong")
+    if len(command) == 1:
+        match int(command):
+            case 1: dotask.GetAllCourse(cursor)
+            #case 2: dotask.SearchBy(cursor)
+            case 3: dotask.AddCourse(cursor, _db)
+            case 4: dotask.ModifyCourse(cursor, _db)
+            case 5: dotask.DeleteCourse(cursor, _db)
+            case 0: break
+            case _: print("Typed Wrong")
 
-    # Task Ended, Ask for another task
-    print("Task completed! Is anything to do more? \n 1. Retreive all existing courses \n 2. Select a course and get its details" \
-        "\n 3. Add a course with its info \n 4. Modify course info \n 5. Delete course info" \
-        "Type the number to proceed, or Type 0 to exit.")
-
-    command = int(input())
+        # Task Ended, Ask for another task
+        print("Task completed! Is anything to do more? \n 1. Retreive all existing courses \n 2. Select a course and get its details" \
+            "\n 3. Add a course with its info \n 4. Modify course info \n 5. Delete course info" \
+            "Type the number to proceed, or Type 0 to exit.")
+        command = input()
+    else:
+        print("Type Valid number")
+        command = input()
 
 # Disconnect from MySQL
 cursor.close()

@@ -19,11 +19,11 @@ def quryAndJsonify(query, cursor):
 @app.get("/courses/", status_code=status.HTTP_302_FOUND)
 def checkcolnames(cursor):
     query = '''
-    SELECT COLUMN_NAME
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_NAME = %s
-    AND TABLE_SCHEMA = %s
-    '''
+            SELECT COLUMN_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = (%s)
+            AND TABLE_SCHEMA = (%s)
+            '''
     cursor.execute(query, ('asu_courses', 'course_recommender')) 
     return [row[0] for row in cursor.fetchall()]
 
@@ -34,39 +34,58 @@ def checkduplicates(cursor, info):
     cursor.execute(query)
     return [row[0] for row in cursor.fetchall()]
 
+#####################################################################
+
 # Welcome Page
 @app.get("/", status_code=status.HTTP_302_FOUND)
 def welcome_message():
     results = "welsome"
     return results
 
-# Task 1-2: Call All Course Info
+# Task 1-2: Call All Course Info (In Ordered)
 @app.get("/courses/", response_class=PlainTextResponse)
 def callall(cursor):
-    query = "SELECT * FROM asu_courses"
+    query = '''
+            SELECT * FROM asu_courses
+            order by `subject`, `code`
+            '''
     return quryAndJsonify(query, cursor)
 
 # Task 3-2: Add Course Info
-@app.post("/courses/", response_class=PlainTextResponse)
+@app.post("/courses/", status_code=status.HTTP_200_OK)
 def addcourse(cursor, db, sbj, code, name):
-    query = "INSERT INTO asu_courses (`subject`, `code`, `name`) VALUES (%s, %s, %s)"
+    query = '''
+            INSERT INTO asu_courses
+            (`subject`, `code`, `name`) VALUES (%s, %s, %s)
+            '''
     values = (sbj, code, name)
+    cursor.execute(query, values)
+    db.commit()
+
+# Task 4-2: Modify Course Info
+@app.put("/courses/", status_code=status.HTTP_200_OK)
+def modifcourseinfo(cursor, db, newdata, targetcourse, info):
+    query = f'''
+            UPDATE asu_courses
+            set `{info}` = (%s)
+            where `code` = (%s)
+            '''
+    values = (newdata, targetcourse)
     cursor.execute(query, values)
     db.commit()
 
 # Task 5-2: Delete Course Info
 @app.delete("/courses/", status_code=status.HTTP_200_OK)
 def deletecourse(cursor, db, code):
-    query = "DELETE FROM asu_courses WHERE `code` = %s"
+    query = '''
+            DELETE FROM asu_courses
+            WHERE `code` = (%s)
+            '''
     values = (code,)
-    # Find the course, if not, just ignore 
-
-
-
-
     cursor.execute(query, values)
     db.commit()
 
+#####################################################################
 
 '''
 @app.get("/users/{user_id}", status_code=status.HTTP_200_OK)
