@@ -1,13 +1,13 @@
 import course_api
 
 # Add, Modify, Deletion Must pass Through It
-def IsColName(cursor, var):
-    keywords = course_api.checkcolnames(cursor)
+def IsColName(var):
+    keywords = course_api.checkcolnames()
     return var in keywords
 
 # Check for Duplicates for course code, course name
-def CheckDuplicates(cursor, var, info):
-    course_lists = course_api.checkduplicates(cursor, info)
+def CheckDuplicates(var, info):
+    course_lists = course_api.checkduplicates(info)
     while True:
         return var in course_lists
 
@@ -33,19 +33,19 @@ def CheckValidChars(var, info):
     return True
 
 # All Inputs Must Pass Here
-def IsValidInput(cursor, info, checkDup = "Y"):
+def IsValidInput(info, checkDup = "Y"):
     while True:
         var = input(f"What is {info}? Type: ")
-        # Checks all chars are alphnum
+        # Checks all chars ar e alphnum
         if CheckValidChars(var, info): pass
         else: continue
         # Checks future risk for SQL Injection
-        if IsColName(cursor, var):
+        if IsColName(var):
             print("Avoid using those names!")
             continue
         # (Extra Step for "code" & "name") Check Duplicates
         if info in ["code", "name"] and checkDup == "Y":
-            if CheckDuplicates(cursor, var, info):
+            if CheckDuplicates(var, info):
                 print(f"There is a duplicated {var} in {info}")
                 continue         
         return var
@@ -53,65 +53,65 @@ def IsValidInput(cursor, info, checkDup = "Y"):
 ########################################################################
 
 # Task 1-1
-def GetAllCourse(cursor):
+def GetAllCourse():
     print("Showing All Course Info...")
-    print(course_api.callall(cursor))
+    print(course_api.callall())
 
 # Task 2-1
-def SearchBy(cursor):
-    keywords = course_api.checkcolnames(cursor)
+def SearchBy():
+    print("You can search courses by [1. ]")
 
     return ""
 
 # Task 3-1
-def AddCourse(cursor, db):
-    sbj  = IsValidInput(cursor, "subject")
-    code = IsValidInput(cursor, "code")
-    name = IsValidInput(cursor, "name")
-    course_api.addcourse(cursor, db, sbj, code, name) 
+def AddCourse():
+    sbj  = IsValidInput("subject")
+    cd = IsValidInput("code")
+    nm = IsValidInput("name")
+    course_api.addready(sbj, cd, nm) 
     print("perfect!")
 
 # Task 4-1
-def ModifyCourse(cursor, db):
+def ModifyCourse():
     # Modify course info based on course code
     print("Type the course code to modify information")
-    code = IsValidInput(cursor, "code", "N")
-    if CheckDuplicates(cursor, code, "code"):
+    code = IsValidInput("code", "N")
+    if CheckDuplicates(code, "code"):
         # But first, ask if the user need to change course code
         decision = input("Before modify the course info, Do you have to change the code? Y/N: ")
         if decision == 'Y':
             print("Type the new course code: ")
-            newcode = IsValidInput(cursor, "code")
-            if CheckDuplicates(cursor, newcode, "code"):
+            newcode = IsValidInput("code")
+            if CheckDuplicates(newcode, "code"):
                 print(f"{newcode} already exists!" )
             else:
-                course_api.modifcourseinfo(cursor, db, newcode, code, "code")
+                course_api.modifcourseinfo(newcode, code, "code")
                 code = newcode
         # Then change something
         print("What do you want to change? Here are the list: ")
-        print(course_api.checkcolnames(cursor))
+        lists = course_api.checkcolnames()
+        lists.remove('code')
+        print(lists)
         col = input("Choose One: ")
-        if IsColName(cursor, col):
+        if col in lists:
             print("Set new data: ")
-            new = IsValidInput(cursor, col)
-            course_api.modifcourseinfo(cursor, db, new, code, col)
+            new = IsValidInput(col)
+            course_api.modifcourseinfo(new, code, col)
         else:
             print("Invalid input... Terminate")
     else:
         print(f"There is no {code} in database. Terminate.")
-    
-    return ""
 
 # Task 5-1
-def DeleteCourse(cursor, db):
-    code = IsValidInput(cursor, "course code to delete?")
+def DeleteCourse():
+    code = IsValidInput("course code to delete?")
     # Check the existing course is in the "code" column
-    if CheckDuplicates(cursor, code, "code"):
-        course_api.deletecourse(cursor, db, code)
+    if CheckDuplicates(code, "code"):
+        course_api.deletecourse(code)
         print(f"course {code} has been deleted!")
     else:
         print("Nothing to delete...")
 
-# Last Thing
-def MakeOrdered(cursor, db):
-    course_api.makeordered(cursor, db)
+# Finish Task
+def FinishTask():
+    course_api.disconnectSQL()

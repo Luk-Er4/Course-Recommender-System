@@ -18,7 +18,7 @@ def connectSQL():
 
     if mydb.is_connected():
         cursor = mydb.cursor()
-        cursor.execute("SELECT * FROM asu_courses order by 'subject' and code")
+        cursor.execute("SELECT * FROM asu_courses order by subject")
         results = cursor.fetchall()  # Fetch all rows
 
         mydb.close()

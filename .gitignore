@@ -2,3 +2,4 @@
 __pycache__/
 bringpassword_client.py
 bringpassword_admin.py
+data\coursejson\courses_info.json
