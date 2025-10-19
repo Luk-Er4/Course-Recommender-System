@@ -1,6 +1,4 @@
 # ignore pycache
 __pycache__/
-bringpassword_client.py
-bringpassword_admin.py
 courses_info.json
 .pytest_cache
