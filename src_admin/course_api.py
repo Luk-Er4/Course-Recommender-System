@@ -61,7 +61,10 @@ def callall():
             '''
     return quryAndJsonify(query)
 
+# Task 2-2: Provide Filter Search
 @router.get("/courses/", response_class=PlainTextResponse)
+def searchcourse():
+    return
 
 
 # Task 3-2: Add Course Info

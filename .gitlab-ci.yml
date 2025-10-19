@@ -1,10 +1,15 @@
+image: python:3.12
+
 stages:
   - test
 
-test_project:
+before_script:
+  - pip install --upgrade pip
+  - pip install pytest
+  - pip install fastapi uvicorn
+  - pip install mysql-connector-python
+
+test:
   stage: test
-  image: python:3.12
-  before_script:
-    - pip install -r requirements.txt
   script:
     - pytest -v

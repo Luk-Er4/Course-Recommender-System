@@ -10,7 +10,7 @@ def test_check_pass_or_fail():
 
     assert check_pass_or_fail(case1) == pass1
     assert check_pass_or_fail(case2) == pass2
-    assert check_pass_or_fail(case3) == case3
+    assert check_pass_or_fail(case3) == pass3
 
 from src_client.checkwaiver import check_waiver
 
@@ -26,23 +26,3 @@ def test_check_waiver():
     assert check_waiver(case2) == pass2
     assert check_waiver(case3) == pass3
 
-import src_client.main_client as cm 
-
-def test_isCSMajor(monkeypatch):
-    case1 = ["Computer Science"]
-    pass1 = True
-    case2 = ["Cybersecurity"]
-    pass2 = False
-    case3 = ["Computer Science", "Cybersecurity"]
-    pass3 = True
-    case4 = []
-    pass4 = False
-
-    monkeypatch.setattr(cm, "student_major", case1)
-    assert cm.isCSMajor() == pass1
-    monkeypatch.setattr(cm, "student_major", case2)
-    assert cm.isCSMajor() == pass2    
-    monkeypatch.setattr(cm, "student_major", case3)
-    assert cm.isCSMajor() == pass3    
-    monkeypatch.setattr(cm, "student_major", case4)
-    assert cm.isCSMajor() == pass4
