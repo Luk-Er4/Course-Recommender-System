@@ -79,7 +79,7 @@ def makeJson(infos):
         # prestanding, preapproval
         if row[26] != "":
             desc["prestandings"] = row[26]
-        if row[27] != "":
+        if row[27] == "O":
             desc["preapproval"] = True
 
         courses.append(desc)
