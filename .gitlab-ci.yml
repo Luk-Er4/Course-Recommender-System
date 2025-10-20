@@ -4,20 +4,20 @@ services:
   - mysql:latest
 
 variables:
-  MYSQL_DATABASE: $course_recommender
-  MYSQL_ROOT_PASSWORD: $1234!@#E
+  MYSQL_DATABASE: "course_recommender"
+  MYSQL_ROOT_PASSWORD: "1234!@#E"
 
 stages:
-  - Environment Setup
-  - Client DB Connection
-  - Client Function Test
-  - Admin DB Connection
-  - Admin Function Test
-  - Admin API Test
+  - Environment_Setup
+  - Client_DB_Connection
+  - Client_Function_Test
+  - Admin_DB_Connection
+  - Admin_Function_Test
+  - Admin_API_Test
   - Merge
 
 Test Evnironment:
-  stage: Environment Setup
+  stage: Environment_Setup
   script: 
     - echo "Setting up Python environment..."
     - pip install --upgrade pip
@@ -26,39 +26,41 @@ Test Evnironment:
     - pip install mysql-connector-python
 
 Client Connection:
-  stage: Client DB Connection
+  stage: Client_DB_Connection
   script:
     - echo "Testing Client DB Connection..."
-    - pytest .\test\test_client_dbconnection.py -v
+    - pytest ./test/test_client_dbconnection.py -v
+  needs: ["Environment_Setup"]
 
 Client Function:
-  stage: Client Function Test
+  stage: Client_Function_Test
   script:
     - echo "Testing Client Functions..."
-    - pytest .\test\test_client_function.py -v
-  needs: ["Client DB Connection"]
+    - pytest ./test/test_client_function.py -v
+  needs: ["Client_DB_Connection"]
 
 Admin Connection:
-  stage: Admin DB Connection
+  stage: Admin_DB_Connection
   script:
     - echo "Testing Admin DB Connection..."
-    - pytest .\test\test_admin_dbconnection.py -v
+    - pytest ./test/test_admin_dbconnection.py -v
+  needs: ["Environment_Setup"]
 
 Admin Function:
-  stage: Admin Function Test
+  stage: Admin_Function_Test
   script:
     - echo "Testing Admin Functions..."
-    - pytest .\test\test_admin_function.py -v
-  needs: ["Admin DB Connection"]
+    - pytest ./test/test_admin_function.py -v
+  needs: ["Admin_DB_Connection"]
 
 Admin API:
-  stage: Admin API Test
+  stage: Admin_API_Test
   script:
     - echo "Testing Admin APIs... but no test cases now..."
-  needs: ["Admin Function Tests"]
+  needs: ["Admin_Function_Test"]
 
 Merge:
   stage: Merge
   script:
     - echo "Deploying project..."
-  needs: ["Client Function Test", "Admin API Test"]
+  needs: ["Admin_API_Test", "Client_Function_Test"]
