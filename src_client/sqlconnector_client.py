@@ -4,6 +4,7 @@ import bringpassword_client
 def connectSQL():
     print("connecting to SQL...")
     conn = mysql.connector
+    connection_status = False
 
     try:
         mydb = conn.connect(
@@ -21,9 +22,11 @@ def connectSQL():
         cursor.execute("SELECT * FROM asu_courses order by subject")
         results = cursor.fetchall()  # Fetch all rows
 
+        connection_status = True
+
         mydb.close()
 
     rows_num, cols_num = len(results), len(results[0])
     print(rows_num, "courses", cols_num, "data per each course")
 
-    return results
+    return connection_status, results

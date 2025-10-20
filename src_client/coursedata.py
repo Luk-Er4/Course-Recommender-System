@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
-import sqlconnector
+import sqlconnector_client as sc
 import jsoncreator
 
 ##### Get the """DATA""" from json
 def course_data_collection():
     # Get the json file that contains course information
-    result = sqlconnector.connectSQL()
+    result = sc.connectSQL()[1]
     jsoncreator.makeJson(result)
 
     file_path = Path("data/coursejson/courses_info.json")

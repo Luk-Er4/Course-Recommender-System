@@ -5,15 +5,10 @@ services:
 
 variables:
   MYSQL_DATABASE: $course_recommender
-  MYSQL_ROOT_PASSWORD: $1234
-
-before_script:
-  - pip install --upgrade pip
-  - pip install pytest
-  - pip install fastapi uvicorn
-  - pip install mysql-connector-python
+  MYSQL_ROOT_PASSWORD: $1234!@#E
 
 stages:
+  - Environment Setup
   - Client DB Connection
   - Client Function Test
   - Admin DB Connection
@@ -21,44 +16,49 @@ stages:
   - Admin API Test
   - Merge
 
-Client DB Connection:
+Test Evnironment:
+  stage: Environment Setup
+  script: 
+    - echo "Setting up Python environment..."
+    - pip install --upgrade pip
+    - pip install pytest
+    - pip install fastapi uvicorn
+    - pip install mysql-connector-python
+
+Client Connection:
   stage: Client DB Connection
   script:
-    - echo "Setting up Python environment..."
-    - pip install -r requirements.txt
+    - echo "Testing Client DB Connection..."
+    - pytest .\test\test_client_dbconnection.py -v
 
-Client Function Test:
+Client Function:
   stage: Client Function Test
   script:
-    - echo "Building backend..."
-    - python -m compileall src_admin/
+    - echo "Testing Client Functions..."
+    - pytest .\test\test_client_function.py -v
   needs: ["Client DB Connection"]
 
-Admin DB Connection:
+Admin Connection:
   stage: Admin DB Connection
   script:
-    - echo "Building client..."
-    - python -m compileall src_client/
+    - echo "Testing Admin DB Connection..."
+    - pytest .\test\test_admin_dbconnection.py -v
 
-Admin Function Tests:
+Admin Function:
   stage: Admin Function Test
   script:
-    - echo "Running PyTest..."
-    - pytest --maxfail=1 --disable-warnings -q
+    - echo "Testing Admin Functions..."
+    - pytest .\test\test_admin_function.py -v
   needs: ["Admin DB Connection"]
 
-Admin API Test:
+Admin API:
   stage: Admin API Test
   script:
-    - echo "Running PyTest..."
-    - pytest --maxfail=1 --disable-warnings -q
+    - echo "Testing Admin APIs... but no test cases now..."
   needs: ["Admin Function Tests"]
 
 Merge:
   stage: Merge
   script:
     - echo "Deploying project..."
-    - python deploy_script.py
-  only:
-    - main
-  needs: ["Client Function Test", "AAdmin API Test"]
+  needs: ["Client Function Test", "Admin API Test"]
