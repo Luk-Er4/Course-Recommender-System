@@ -16,7 +16,7 @@ stages:
   - Admin_API_Test
   - Merge
 
-Test_Evnironment:
+Test_Environment:
   stage: Environment_Setup
   script: 
     - echo "Setting up Python environment..."
@@ -25,42 +25,42 @@ Test_Evnironment:
     - pip install fastapi uvicorn
     - pip install mysql-connector-python
 
-Client Connection:
+Client_Connection:
   stage: Client_DB_Connection
   script:
     - echo "Testing Client DB Connection..."
     - pytest ./test/test_client_dbconnection.py -v
-  needs: ["Test_Evnironment"]
+  needs: ["Test_Environment"]
 
-Client Function:
+Client_Function:
   stage: Client_Function_Test
   script:
     - echo "Testing Client Functions..."
     - pytest ./test/test_client_function.py -v
-  needs: ["Client Connection"]
+  needs: ["Client_Connection"]
 
-Admin Connection:
+Admin_Connection:
   stage: Admin_DB_Connection
   script:
     - echo "Testing Admin DB Connection..."
     - pytest ./test/test_admin_dbconnection.py -v
-  needs: ["Test_Evnironment"]
+  needs: ["Test_Environment"]
 
-Admin Function:
+Admin_Function:
   stage: Admin_Function_Test
   script:
     - echo "Testing Admin Functions..."
     - pytest ./test/test_admin_function.py -v
-  needs: ["Admin Connection"]
+  needs: ["Admin_Connection"]
 
-Admin API:
+Admin_API:
   stage: Admin_API_Test
   script:
     - echo "Testing Admin APIs... but no test cases now..."
-  needs: ["Admin Function"]
+  needs: ["Admin_Function"]
 
 Merge:
   stage: Merge
   script:
     - echo "Deploying project..."
-  needs: ["Admin API", "Client Function"]
+  needs: ["Admin_API", "Client_Function"]
