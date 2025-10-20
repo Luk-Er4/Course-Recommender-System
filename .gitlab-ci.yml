@@ -16,7 +16,7 @@ stages:
   - Admin_API_Test
   - Merge
 
-Test Evnironment:
+Test_Evnironment:
   stage: Environment_Setup
   script: 
     - echo "Setting up Python environment..."
@@ -30,37 +30,37 @@ Client Connection:
   script:
     - echo "Testing Client DB Connection..."
     - pytest ./test/test_client_dbconnection.py -v
-  needs: ["Environment_Setup"]
+  needs: ["Test_Evnironment"]
 
 Client Function:
   stage: Client_Function_Test
   script:
     - echo "Testing Client Functions..."
     - pytest ./test/test_client_function.py -v
-  needs: ["Client_DB_Connection"]
+  needs: ["Client Connection"]
 
 Admin Connection:
   stage: Admin_DB_Connection
   script:
     - echo "Testing Admin DB Connection..."
     - pytest ./test/test_admin_dbconnection.py -v
-  needs: ["Environment_Setup"]
+  needs: ["Test_Evnironment"]
 
 Admin Function:
   stage: Admin_Function_Test
   script:
     - echo "Testing Admin Functions..."
     - pytest ./test/test_admin_function.py -v
-  needs: ["Admin_DB_Connection"]
+  needs: ["Admin Connection"]
 
 Admin API:
   stage: Admin_API_Test
   script:
     - echo "Testing Admin APIs... but no test cases now..."
-  needs: ["Admin_Function_Test"]
+  needs: ["Admin Function"]
 
 Merge:
   stage: Merge
   script:
     - echo "Deploying project..."
-  needs: ["Admin_API_Test", "Client_Function_Test"]
+  needs: ["Admin API", "Client Function"]
