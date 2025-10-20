@@ -18,7 +18,7 @@ def check_waiver(transcript, testing = False):
         else:
             with open(str(wavier_dir) + "\\" + target_wavier, "r") as file:
                 content = file.read()
-    print(content)
+            print(content)
 
     if there_is_wavier:
         # Get the Course Code and Grade

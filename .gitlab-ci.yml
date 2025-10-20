@@ -9,11 +9,8 @@ variables:
 
 stages:
   - Environment_Setup
-  - Client_DB_Connection
-  - Client_Function_Test
-  - Admin_DB_Connection
-  - Admin_Function_Test
-  - Admin_API_Test
+  - DB_Connection
+  - Functions_Test
   - Merge
 
 Test_Environment:
@@ -24,43 +21,63 @@ Test_Environment:
     - pip install pytest
     - pip install fastapi uvicorn
     - pip install mysql-connector-python
+  artifacts:
+    paths: [venv/]
 
 Client_Connection:
-  stage: Client_DB_Connection
+  stage: DB_Connection
   script:
+    - echo "Setting up Python environment..."
+    - pip install --upgrade pip
+    - pip install pytest
+    - pip install fastapi uvicorn
+    - pip install mysql-connector-python
+
     - echo "Testing Client DB Connection..."
     - pytest ./test/test_client_dbconnection.py -v
   needs: ["Test_Environment"]
 
-Client_Function:
-  stage: Client_Function_Test
-  script:
-    - echo "Testing Client Functions..."
-    - pytest ./test/test_client_function.py -v
-  needs: ["Client_Connection"]
-
 Admin_Connection:
-  stage: Admin_DB_Connection
+  stage: DB_Connection
   script:
+    - echo "Setting up Python environment..."
+    - pip install --upgrade pip
+    - pip install pytest
+    - pip install fastapi uvicorn
+    - pip install mysql-connector-python
+
     - echo "Testing Admin DB Connection..."
     - pytest ./test/test_admin_dbconnection.py -v
   needs: ["Test_Environment"]
 
-Admin_Function:
-  stage: Admin_Function_Test
+Client_Function:
+  stage: Functions_Test
   script:
+    - echo "Setting up Python environment..."
+    - pip install --upgrade pip
+    - pip install pytest
+    - pip install fastapi uvicorn
+    - pip install mysql-connector-python
+
+    - echo "Testing Client Functions..."
+    - pytest ./test/test_client_function.py -v
+  needs: ["Client_Connection"]
+
+Admin_Function:
+  stage: Functions_Test
+  script:
+    - echo "Setting up Python environment..."
+    - pip install --upgrade pip
+    - pip install pytest
+    - pip install fastapi uvicorn
+    - pip install mysql-connector-python
+
     - echo "Testing Admin Functions..."
     - pytest ./test/test_admin_function.py -v
   needs: ["Admin_Connection"]
-
-Admin_API:
-  stage: Admin_API_Test
-  script:
-    - echo "Testing Admin APIs... but no test cases now..."
-  needs: ["Admin_Function"]
 
 Merge:
   stage: Merge
   script:
     - echo "Deploying project..."
-  needs: ["Admin_API", "Client_Function"]
+  needs: ["Admin_Function", "Client_Function"]
