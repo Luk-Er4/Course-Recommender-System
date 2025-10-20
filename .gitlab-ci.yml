@@ -1,7 +1,11 @@
 image: python:3.12
 
-stages:
-  - test
+services:
+  - mysql:latest
+
+variables:
+  MYSQL_DATABASE: $course_recommender
+  MYSQL_ROOT_PASSWORD: $1234
 
 before_script:
   - pip install --upgrade pip
@@ -9,7 +13,52 @@ before_script:
   - pip install fastapi uvicorn
   - pip install mysql-connector-python
 
-test:
-  stage: test
+stages:
+  - Client DB Connection
+  - Client Function Test
+  - Admin DB Connection
+  - Admin Function Test
+  - Admin API Test
+  - Merge
+
+Client DB Connection:
+  stage: Client DB Connection
   script:
-    - pytest -v
+    - echo "Setting up Python environment..."
+    - pip install -r requirements.txt
+
+Client Function Test:
+  stage: Client Function Test
+  script:
+    - echo "Building backend..."
+    - python -m compileall src_admin/
+  needs: ["Client DB Connection"]
+
+Admin DB Connection:
+  stage: Admin DB Connection
+  script:
+    - echo "Building client..."
+    - python -m compileall src_client/
+
+Admin Function Tests:
+  stage: Admin Function Test
+  script:
+    - echo "Running PyTest..."
+    - pytest --maxfail=1 --disable-warnings -q
+  needs: ["Admin DB Connection"]
+
+Admin API Test:
+  stage: Admin API Test
+  script:
+    - echo "Running PyTest..."
+    - pytest --maxfail=1 --disable-warnings -q
+  needs: ["Admin Function Tests"]
+
+Merge:
+  stage: Merge
+  script:
+    - echo "Deploying project..."
+    - python deploy_script.py
+  only:
+    - main
+  needs: ["Client Function Test", "AAdmin API Test"]

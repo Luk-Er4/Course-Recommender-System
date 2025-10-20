@@ -8,7 +8,7 @@ def test_isColName():
         assert sd.IsColName(cases[i]) == passs[i]
 
 def test_CheckDuplicates():
-    cases_code = ["CS1314", "CS9999", "MATH7452", "MATH2312"]
+    cases_code = ["CS1314", "CS999999999", "MATH7654321", "MATH2312"]
     passs_code = [True, False, False, True]
     cases_name = ["Research", "Ultimate Mathematics", "Computer Science I", "Great Computers"]
     passs_name = [True, False, True, False]
