@@ -22,7 +22,8 @@ def test_check_waiver():
     case3 = "Max_Powell.txt"
     pass3 = []
 
-    assert check_waiver(case1) == pass1
-    assert check_waiver(case2) == pass2
-    assert check_waiver(case3) == pass3
+    # different way to handle file paths in Linux, 
+    assert check_waiver(case1, True) == pass1
+    assert check_waiver(case2, True) == pass2
+    assert check_waiver(case3, True) == pass3
 

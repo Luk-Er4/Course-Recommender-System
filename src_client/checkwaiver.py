@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-def check_waiver(transcript):
+def check_waiver(transcript, testing = False):
     # Check Wavier by tracking student name
     wavier_dir = Path("data/Wavier for Students")
     wavier_lst = os.listdir(wavier_dir)
@@ -12,9 +12,13 @@ def check_waiver(transcript):
 
     if target_wavier in wavier_lst:
         there_is_wavier = True
-        with open(str(wavier_dir) + "\\" + target_wavier, "r") as file:
-            content = file.read()
-            print(content)
+        if testing:
+            with open(str(wavier_dir) + "/" + target_wavier, "r") as file:    
+                content = file.read()
+        else:
+            with open(str(wavier_dir) + "\\" + target_wavier, "r") as file:
+                content = file.read()
+    print(content)
 
     if there_is_wavier:
         # Get the Course Code and Grade
