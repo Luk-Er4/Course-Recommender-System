@@ -1,0 +1,10 @@
+FROM python:3.12
+
+ADD ./ .
+
+RUN pip install --upgrade pip
+RUN pip install pytest
+RUN pip install fastapi uvicorn
+RUN pip install mysql-connector-python
+
+CMD ["python", "./src_admin/main_admin.py"]
