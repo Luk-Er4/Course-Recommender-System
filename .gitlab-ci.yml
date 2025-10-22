@@ -7,11 +7,15 @@ variables:
   MYSQL_DATABASE: "course_recommender"
   MYSQL_ROOT_PASSWORD: "1234!@#E"
 
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
 stages:
   - Environment_Setup
   - DB_Connection
   - Functions_Test
-  - Merge
+  - Build
+  - Push
 
 Test_Environment:
   stage: Environment_Setup
@@ -81,3 +85,25 @@ Merge:
   script:
     - echo "Deploying project..."
   needs: ["Admin_Function", "Client_Function"]
+
+build_image:
+  stage: Build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $IMAGE_TAG .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+  needs: ["Merge"]
+
+push_image:
+  stage: Push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $IMAGE_TAG
+    - docker push $CI_REGISTRY_IMAGE:latest
+  needs: ["build_image"]
