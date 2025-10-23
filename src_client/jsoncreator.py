@@ -1,4 +1,5 @@
 import json
+import pathlib as Path
 
 def makeJson(infos):
     # set for space to make json
@@ -95,6 +96,7 @@ def makeJson(infos):
     EntireCourses["ASUcourses"] = ASUcourses
 
     # create json file
-    with open(f"data\coursejson\courses_info.json", "w", encoding="utf-8") as f:
+    data_path = Path("data/coursejson/courses_info.json")
+    with open(data_path, "w", encoding="utf-8") as f:
         json.dump(EntireCourses, f, indent=4, ensure_ascii=False)
             
