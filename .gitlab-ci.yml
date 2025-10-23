@@ -14,8 +14,9 @@ stages:
   - Environment_Setup
   - DB_Connection
   - Functions_Test
-  - Build
-  - Push
+  - Build_Push_GitLab
+  - Build_Push_Azure
+  - Deploy_ACI
 
 Test_Environment:
   stage: Environment_Setup
@@ -80,30 +81,86 @@ Admin_Function:
     - pytest ./test/test_admin_function.py -v
   needs: ["Admin_Connection"]
 
-Merge:
-  stage: Merge
-  script:
-    - echo "Deploying project..."
-  needs: ["Admin_Function", "Client_Function"]
-
-build_image:
-  stage: Build
+Admin_build_push_GitLab:
+  stage: Build_Push_GitLab
   image: docker:latest
   services:
     - docker:dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/admin:$CI_COMMIT_REF_SLUG
   script:
-    - docker build -t $IMAGE_TAG .
+    - echo "Logging into registry..."
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Building image..."
+    - docker build -f Dockerfile.admin -t $IMAGE_TAG .
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
-  needs: ["Merge"]
-
-push_image:
-  stage: Push
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Pushing image..."
     - docker push $IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE:latest
-  needs: ["build_image"]
+
+Client_build_push_GitLab:
+  stage: Build_Push_GitLab
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/client:$CI_COMMIT_REF_SLUG
+  script:
+    - echo "Logging into registry..."
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - echo "Building image..."
+    - docker build -f Dockerfile.client -t $IMAGE_TAG .
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+    - echo "Pushing image..."
+    - docker push $IMAGE_TAG
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+
+Admin_build_push_Azure:
+  stage: Build_Push_Azure
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    AZURE_IMAGE_TAG: $ACR_LOGIN_SERVER/admin_ver:latest
+  script:
+    - echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
+    - docker build -f Dockerfile.admin -t $AZURE_IMAGE_TAG .
+    - docker push $AZURE_IMAGE_TAG
+
+Client_build_push_Azure:
+  stage: Build_Push_Azure
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    AZURE_IMAGE_TAG: $ACR_LOGIN_SERVER/admin_ver:latest
+  script:
+    - echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
+    - docker build -f Dockerfile.client -t $AZURE_IMAGE_TAG .
+    - docker push $AZURE_IMAGE_TAG
+
+Admin_Deploy_to_azure:
+  stage: Deploy_ACI
+  image: mcr.microsoft.com/azure-cli
+  variables:
+    AZURE_IMAGE_TAG: $ACR_LOGIN_SERVER/admin_ver:latest
+  script:
+    - echo "Logging into Azure..."
+    - az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_SECRET --tenant $AZURE_TENANT_ID
+    - az account set --subscription $AZURE_SUBSCRIPTION_ID
+    - echo "Deploying container..."
+    - az container create \
+      --resource-group myself \
+      --name ASUCourseAdmin \
+      --image $ACR_LOGIN_SERVER/admin_ver:latest \
+      --registry-login-server $ACR_LOGIN_SERVER \
+      --registry-username $ACR_USERNAME \
+      --registry-password $ACR_PASSWORD \
+      --dns-name-label courseadmin$RANDOM \
+      --ports 80 \
+      --os-type Linux \
+      --memory 1 \
+      --cpu 1 \
+      --location eastus
+
