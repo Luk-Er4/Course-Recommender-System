@@ -1,10 +1,12 @@
 FROM python:3.12
 
-ADD ./ .
+WORKDIR /app
+
+COPY . .
 
 RUN pip install --upgrade pip
 RUN pip install pytest
 RUN pip install fastapi uvicorn
 RUN pip install mysql-connector-python
 
-CMD ["python", "./src_client/main_client.py"]
+CMD ["python", "src_client/main_client.py"]
