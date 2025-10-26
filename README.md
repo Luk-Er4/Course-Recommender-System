@@ -3,6 +3,6 @@ Predicate logics are used for the project.
 
 This is a extension of Artificial Intelligence project collaborated with Ryan Huckabee and Eric Balota.
 
-The document below shows the overall design for the course recommender system.
+Here is the GitLab repository to conduct CI/CD DevOps: https://gitlab.com/Luk-Er4/Course-Recommender-System-CS
 
-[Project Design.pdf](https://github.com/user-attachments/files/22456106/Project.Design.pdf)
+
