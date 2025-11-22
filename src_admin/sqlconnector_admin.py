@@ -7,7 +7,7 @@ def connectSQL():
 
     try:
         mydb = conn.connect(
-            host="willmigratecourses.mysql.database.azure.com", 
+            host=bringpassword_admin.db_endpoint, 
             user="user",
             password=bringpassword_admin.pw, # ___YOUR__PASSWORD___ put your password here
             database="course_recommender" 

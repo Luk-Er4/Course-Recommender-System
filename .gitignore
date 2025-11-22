@@ -2,5 +2,5 @@
 __pycache__/
 courses_info.json
 .pytest_cache
-bringpassword_admin.py
-bringpassword_client.py
+src_admin/bringpassword_admin.py
+src_client/bringpassword_client.py
